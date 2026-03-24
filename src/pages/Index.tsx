@@ -1,16 +1,43 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import Navigation from "@/components/Navigation";
+import Hero from "@/components/Hero";
+import ProjectGrid from "@/components/ProjectGrid";
+import CaseStudy from "@/components/CaseStudy";
+import AboutMe from "@/components/AboutMe";
+import Contact from "@/components/Contact";
 
-// IMPORTANT: Fully REPLACE this with your own code
-const PlaceholderIndex = () => {
-  // PLACEHOLDER: Replace this entire return statement with the user's app.
-  // The inline background color is intentionally not part of the design system.
+const Index = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center" style={{ backgroundColor: '#fcfbf8' }}>
-      <img data-lovable-blank-page-placeholder="REMOVE_THIS" src="/placeholder.svg" alt="Your app will live here!" />
+    <div className="min-h-screen">
+      <Navigation />
+      <Hero />
+      <div id="work">
+        <ProjectGrid />
+      </div>
+      <div id="case-study">
+        <CaseStudy />
+      </div>
+      <div id="about">
+        <AboutMe />
+      </div>
+      <div id="contact">
+        <Contact />
+      </div>
+      <footer className="px-8 md:px-16 py-12 border-t border-border max-w-[1440px] mx-auto flex items-center justify-between">
+        <span className="font-mono text-xs text-secondary">© 2025 Alex Chen</span>
+        <div className="flex gap-6">
+          {["GitHub", "LinkedIn", "Twitter"].map((link) => (
+            <a
+              key={link}
+              href="#"
+              className="font-mono text-xs text-secondary hover:text-foreground transition-colors duration-300 underline underline-offset-4"
+            >
+              {link}
+            </a>
+          ))}
+        </div>
+      </footer>
     </div>
   );
 };
-
-const Index = PlaceholderIndex;
 
 export default Index;
