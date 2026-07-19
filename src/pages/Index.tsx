@@ -13,7 +13,7 @@ const socials =
     },
     {
       name: "LinkedIn",
-      link: "https://linkedin/emmanuel-agbenin",
+      link: "https://www.linkedin.com/in/emmanuel-agbenin-185754220/",
     },
     
   ]
