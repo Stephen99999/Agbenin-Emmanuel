@@ -10,7 +10,7 @@ const Navigation = () => {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 md:px-16 py-6">
-      <span className="font-serif text-xl tracking-[-0.02em]">A.C.</span>
+      <span className="font-serif text-xl tracking-[-0.02em]">A.E.</span>
 
       <button
         onClick={() => setOpen(!open)}

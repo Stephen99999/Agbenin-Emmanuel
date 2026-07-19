@@ -53,7 +53,7 @@ const Hero = () => {
           <div className="flex items-center gap-3">
             <span className="font-mono text-xs uppercase tracking-widest text-secondary">Based</span>
             <span className="h-px flex-1 bg-border" />
-            <span className="font-mono text-sm">San Francisco, CA</span>
+            <span className="font-mono text-sm">Plymouth, UK</span>
           </div>
         </div>
       </div>

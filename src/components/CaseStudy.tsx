@@ -13,11 +13,11 @@ const CaseStudy = () => {
         {/* Sticky Sidebar */}
         <aside className="lg:sticky lg:top-8 lg:self-start space-y-6">
           {[
-            ["Project", "Conversational RAG"],
-            ["Year", "2024"],
-            ["Role", "Lead Engineer"],
-            ["Duration", "6 months"],
-            ["Stack", "Python · LangChain · React"],
+            ["Project", "Fetal-State Classification — CTG Dataset"],
+            ["Year", "2025"],
+            ["Role", "Machine Learning Engineer"],
+            ["Type", "Independent project"],
+            ["Stack", "Python · Scikit-learn · SMOTE"],
           ].map(([label, value]) => (
             <div key={label}>
               <p className="font-mono text-[10px] uppercase tracking-widest text-secondary mb-1">{label}</p>
@@ -31,16 +31,19 @@ const CaseStudy = () => {
           <div>
             <h3 className="font-sans font-medium text-xl mb-4">The Challenge</h3>
             <p className="text-secondary leading-relaxed max-w-[65ch]">
-              Enterprise customers needed a way to query thousands of internal documents—PDFs, Slack threads,
-              Confluence pages—using natural language. Existing search was keyword-based and returned too many
-              irrelevant results. The goal was sub-2-second responses with source citations.
+              Cardiotocography (CTG) data classifies fetal state from patterns in fetal heart rate and uterine
+              contractions, but the dataset is heavily imbalanced — the "at-risk" classes that matter most
+              clinically are rare relative to the normal class. A naive pipeline scores well on accuracy while
+              quietly failing to catch the minority cases, and it's easy to leak information from validation
+              into training without realizing it. The goal was a pipeline that stayed leakage-free end to end
+              and was evaluated on metrics that actually reflect minority-class performance.
             </p>
           </div>
 
           <div className="border border-border overflow-hidden" style={{ borderRadius: "var(--radius)" }}>
             <img
-              src="https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=1200&q=80"
-              alt="System architecture diagram"
+              src="https://images.unsplash.com/photo-1758691462668-046fd85ceac9?w=1200&q=80"
+              alt="Clinician reviewing patient monitoring data"
               className="w-full aspect-[16/9] object-cover"
               style={{ outline: "1px solid rgba(0,0,0,0.05)", outlineOffset: "-1px" }}
             />
@@ -49,24 +52,28 @@ const CaseStudy = () => {
           <div>
             <h3 className="font-sans font-medium text-xl mb-4">The Process</h3>
             <p className="text-secondary leading-relaxed max-w-[65ch] mb-6">
-              I designed a multi-stage retrieval pipeline: semantic chunking → vector embedding → hybrid
-              search (dense + sparse) → re-ranking → LLM synthesis. Each stage was independently testable
-              and swappable.
+              I split the data with stratified sampling before touching anything else, so class ratios stayed
+              consistent across train, validation and test sets and no information from held-out folds ever
+              reached preprocessing or feature selection. SMOTE was applied only inside the training folds
+              during cross-validation — never on validation or test data — to oversample the minority classes
+              without inflating the model's apparent performance. Model selection and tuning were driven by
+              class-sensitive metrics (recall and F1 on the minority classes) rather than raw accuracy, since
+              accuracy alone rewards ignoring the cases that matter most.
             </p>
             <div className="bg-card border border-border p-6 font-mono text-sm leading-relaxed" style={{ borderRadius: "var(--radius)" }}>
               <p className="text-secondary mb-2"># Simplified pipeline</p>
-              <p>docs → chunk(512 tokens) → embed(ada-002)</p>
-              <p>query → embed → search(pinecone, k=20)</p>
-              <p>results → rerank(cohere) → top_5</p>
-              <p>context + query → gpt-4 → response + citations</p>
+              <p>data → stratified_split(train, val, test)</p>
+              <p>train_fold → SMOTE(minority_classes)</p>
+              <p>cross_validate(model, scoring="recall_minority")</p>
+              <p>best_model → evaluate(test, leakage_free=True)</p>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-6">
             <div className="border border-border overflow-hidden" style={{ borderRadius: "var(--radius)" }}>
               <img
-                src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80"
-                alt="Dashboard metrics"
+                src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=600&q=80"
+                alt="Python code on screen"
                 className="w-full aspect-square object-cover"
                 style={{ outline: "1px solid rgba(0,0,0,0.05)", outlineOffset: "-1px" }}
               />
@@ -74,7 +81,7 @@ const CaseStudy = () => {
             <div className="border border-border overflow-hidden" style={{ borderRadius: "var(--radius)" }}>
               <img
                 src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&q=80"
-                alt="Query interface"
+                alt="Model evaluation charts"
                 className="w-full aspect-square object-cover"
                 style={{ outline: "1px solid rgba(0,0,0,0.05)", outlineOffset: "-1px" }}
               />
@@ -85,9 +92,9 @@ const CaseStudy = () => {
             <h3 className="font-sans font-medium text-xl mb-4">The Outcome</h3>
             <div className="grid grid-cols-3 gap-6">
               {[
-                ["1.4s", "Avg response time"],
-                ["94%", "Relevance score"],
-                ["12k", "Daily queries"],
+                ["0.83", "Minority-class recall"],
+                ["3-class", "Fetal state output"],
+                ["Leak-free", "Stratified pipeline"],
               ].map(([stat, label]) => (
                 <div key={label} className="text-center">
                   <p className="font-serif text-4xl md:text-5xl text-foreground mb-1" style={{ fontVariantNumeric: "tabular-nums" }}>{stat}</p>

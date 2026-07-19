@@ -5,6 +5,19 @@ import CaseStudy from "@/components/CaseStudy";
 import AboutMe from "@/components/AboutMe";
 import Contact from "@/components/Contact";
 
+const socials =
+  [
+    {
+      name: "GitHub",
+      link: "https://github.com/Emmynex"
+    },
+    {
+      name: "LinkedIn",
+      link: "https://linkedin/emmanuel-agbenin",
+    },
+    
+  ]
+
 const Index = () => {
   return (
     <div className="min-h-screen">
@@ -23,15 +36,15 @@ const Index = () => {
         <Contact />
       </div>
       <footer className="px-8 md:px-16 py-12 border-t border-border max-w-[1440px] mx-auto flex items-center justify-between">
-        <span className="font-mono text-xs text-secondary">© 2025 Alex Chen</span>
+        <span className="font-mono text-xs text-secondary">© 2026 Agbenin Emmanuel</span>
         <div className="flex gap-6">
-          {["GitHub", "LinkedIn", "Twitter"].map((link) => (
+          {socials.map((link) => (
             <a
-              key={link}
-              href="#"
+              key={link.name}
+              href={link.link}
               className="font-mono text-xs text-secondary hover:text-foreground transition-colors duration-300 underline underline-offset-4"
             >
-              {link}
+              {link.name}
             </a>
           ))}
         </div>

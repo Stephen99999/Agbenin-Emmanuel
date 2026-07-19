@@ -2,6 +2,11 @@ import { useState, useRef, useEffect } from "react";
 
 type Line = { type: "system" | "user" | "response"; text: string };
 
+const CONTACT_EMAIL = "agbeninemmanuel@gmail.com";
+// WhatsApp click-to-chat needs the number in international format,
+// digits only, no "+", no spaces (e.g. 2347061595214 for +234 706 159 5214).
+const CONTACT_NUMBER = "447350158806";
+
 const HELP_TEXT = [
   "Available commands:",
   "  /message  — Send me a message",
@@ -17,6 +22,7 @@ const Contact = () => {
   ]);
   const [input, setInput] = useState("");
   const [messageMode, setMessageMode] = useState(false);
+  const [sending, setSending] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -26,18 +32,45 @@ const Contact = () => {
 
   const addLines = (newLines: Line[]) => setLines((prev) => [...prev, ...newLines]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // No backend, no third-party API, no API key: wa.me is WhatsApp's
+  // own click-to-chat deep link, not a service you sign up for. It
+  // opens WhatsApp (app on mobile, WhatsApp Web on desktop) with the
+  // message pre-filled — the visitor still taps send themselves.
+  const sendMessage = async (message: string) => {
+    setSending(true);
+
+    let copied = false;
+    try {
+      await navigator.clipboard.writeText(message);
+      copied = true;
+    } catch {
+      // Clipboard can fail on insecure contexts or denied permission — ignore.
+    }
+
+    const waLink = `https://wa.me/${CONTACT_NUMBER}?text=${encodeURIComponent(message)}`;
+    window.open(waLink, "_blank", "noopener,noreferrer");
+
+    addLines([
+      { type: "response", text: "Opening WhatsApp with your message pre-filled — just hit send. ✓" },
+      ...(copied
+        ? [{ type: "system" as const, text: "Also copied your message to the clipboard, just in case." }]
+        : []),
+      { type: "system", text: `If nothing opened: message me directly at +${CONTACT_NUMBER.replace(/(\d{3})(\d{3})(\d{3})(\d{4})/, "$1 $2 $3 $4")}` },
+    ]);
+    setSending(false);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const cmd = input.trim();
-    if (!cmd) return;
+    if (!cmd || sending) return;
 
     if (messageMode) {
-      addLines([
-        { type: "user", text: cmd },
-        { type: "response", text: "Message received. I'll get back to you within 24 hours. ✓" },
-      ]);
+      const userLine: Line = { type: "user", text: cmd };
+      addLines([userLine, { type: "system", text: "Sending..." }]);
       setMessageMode(false);
       setInput("");
+      await sendMessage(cmd);
       return;
     }
 
@@ -57,7 +90,7 @@ const Contact = () => {
         addLines([
           userLine,
           { type: "response", text: "Exciting! I'm currently available for contract and full-time roles." },
-          { type: "response", text: "→ Email: hello@alexchen.dev" },
+          { type: "response", text: `→ WhatsApp: +${CONTACT_NUMBER}` },
           { type: "response", text: "→ Or type /message to tell me about your project." },
         ]);
         break;
@@ -134,7 +167,8 @@ const Contact = () => {
               ref={inputRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              className="flex-1 bg-transparent font-mono text-sm text-primary-foreground outline-none placeholder:text-primary-foreground/30"
+              disabled={sending}
+              className="flex-1 bg-transparent font-mono text-sm text-primary-foreground outline-none placeholder:text-primary-foreground/30 disabled:opacity-50"
               placeholder={messageMode ? "Type your message..." : "Type a command..."}
               autoFocus
             />
@@ -143,9 +177,14 @@ const Contact = () => {
       </div>
 
       <p className="text-center font-mono text-xs text-secondary mt-6">
-        Or just email me at{" "}
-        <a href="mailto:hello@alexchen.dev" className="text-accent underline underline-offset-4 hover:text-foreground transition-colors">
-          hello@alexchen.dev
+        Or just send me a mail at{" "}
+        <a
+          href={`mail::to ${CONTACT_EMAIL}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-accent underline underline-offset-4 hover:text-foreground transition-colors"
+        >
+          {CONTACT_EMAIL}
         </a>
       </p>
     </section>
