@@ -12,7 +12,7 @@ const AboutMe = () => {
         <div className="space-y-6">
           <p className="text-lg leading-relaxed text-secondary max-w-[55ch]">
             I'm an AI engineer who believes the best technology feels invisible. Over the past three years,
-            I've shipped systems used by millions from real-time from FX, inter-bank transfer and payment operations architectures to multiple Machine Learning Models that are employed in daily use by individuals.
+            I've shipped systems used by millions from real-time FX, inter-bank transfer and payment operations architectures to multiple Machine Learning Models that are employed in daily use by individuals.
           </p>
           <p className="text-lg leading-relaxed text-secondary max-w-[55ch]">
             Before AI, I studied cognitive science. That background shapes everything I build:
